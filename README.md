@@ -40,39 +40,39 @@ Here is all steps by steps installing this project.
 ![Alt text](images/image1.png)
 Host and Hostname you must keep the same, and change your User to your Testbed's username and IdentityFile is the link to your private key.
 - Then you now can connect to your Testbed folder like this:
-![Alt text](image.png)
-![Alt text](image-1.png)
-![Alt text](image-2.png)
+![Alt text](images/image.png)
+![Alt text](images/image-1.png)
+![Alt text](images/image-2.png)
 
 After seeing SSH: grenoble.iot-lab.info appeared on your bottom left corner, you has successfully connected to your Testbed.
 Now click on "Open folder" button. 
-![Alt text](image-3.png)
+![Alt text](images/image-3.png)
 
 Then click OK
-![Alt text](image-4.png)
+![Alt text](images/image-4.png)
 
 4. Clone our repository to your IOT Testbed folder at the default branch.
 - Open terminal on VScode
-![Alt text](image-11.png)
+![Alt text](images/image-11.png)
 - Clone our repo:
 ```shell
 git clone https://github.com/manhhungking/IOT-project-1.git
 ```
-![Alt text](image-12.png)
+![Alt text](images/image-12.png)
 - Clone RIOT
 ```shell
 git clone https://github.com/RIOT-OS/RIOT.git
 ```
-![Alt text](image-13.png)
+![Alt text](images/image-13.png)
 After that, you should have 2 folders like this:
-![Alt text](image-14.png)
+![Alt text](images/image-14.png)
 - Navigate to project folder
 ```shell
 cd IOT_Mini_Project1
 ```
-![Alt text](image-15.png)
+![Alt text](images/image-15.png)
 - Building RIOT on the SSH frontend requires a recent ARM gcc toolchain, the default is 4.9 and is not compatible. You just have to issue the ```source /opt/riot.source``` command like this:
-![Alt text](image-16.png)
+![Alt text](images/image-16.png)
  
 ### Usage
 
@@ -82,7 +82,7 @@ In order to run this project after installing it, you should follow this instruc
 ```shell
 ssh username@grenoble.iot-lab.info
 ``` 
-with username is your Testbed's username: eg. ```ssh iot2023oulu16@grenoble.iot-lab.info```
+with username is your Testbed's username: eg. ```ssh iot2023oulu72@grenoble.iot-lab.info```
 1. Submit an experiment on IoT-LAB with 2 nodes:
 ```shell
 iotlab-experiment submit -n "IOT_Mini_Project1" -d 300 -l 2,archi=m3:at86rf231+site=grenoble,./bin/iotlab-m3/gcoap_example.elf
@@ -105,13 +105,13 @@ iotlab-node -i 389721 -l grenoble,m3,103 -up ./bin/iotlab-m3/gcoap_example.elf
 iotlab-node -i 389721 -l grenoble,m3,104 -up ./bin/iotlab-m3/gcoap_example.elf
 # make DEFAULT_CHANNEL=18 DEFAULT_PAN_ID=0x3be0 IOTLAB_NODE=m3-96.grenoble.iot-lab.info flash
 ```
-![Alt text](image-6.png)
-![Alt text](image-7.png)
+![Alt text](images/image-6.png)
+![Alt text](images/image-7.png)
 <!-- ```shell
 make BOARD=iotlab-m3 IOTLAB_NODE=auto flash
 ``` -->
 Now you should be able to use all command available in our project as below, furthur explaination on these commands will be on below:
-![Alt text](image-10.png)
+![Alt text](images/image-10.png)
 
 Usage: replace "fe80::e449:92fa:8265:160d" with your ip6 address
 ```shell
@@ -123,7 +123,7 @@ coap put fe80::e449:92fa:8265:160d 5683 /value 8888
 coap get fe80::e449:92fa:8265:160d 5683 /value
 ```
 5. Next step:
-![Alt text](image-5.png)
+![Alt text](images/image-5.png)
 
 ## Project Structure
 
