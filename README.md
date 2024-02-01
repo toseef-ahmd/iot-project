@@ -70,61 +70,125 @@ After that, you should have 2 folders like this:
 ```shell
 cd IOT_Mini_Project1
 ```
-![Alt text](images/image-15.png)
+![Alt text](image-15.png)
 - Building RIOT on the SSH frontend requires a recent ARM gcc toolchain, the default is 4.9 and is not compatible. You just have to issue the ```source /opt/riot.source``` command like this:
 ![Alt text](images/image-16.png)
  
 ### Usage
 
-In order to run this project after installing it, you should follow this instruction line by line: 
-
-0. Connect to IoT-Lab server using cmd:
-```shell
-ssh username@grenoble.iot-lab.info
-``` 
-with username is your Testbed's username: eg. ```ssh iot2023oulu72@grenoble.iot-lab.info```
-1. Submit an experiment on IoT-LAB with 2 nodes:
-```shell
-iotlab-experiment submit -n "IOT_Mini_Project1" -d 300 -l 2,archi=m3:at86rf231+site=grenoble,./bin/iotlab-m3/gcoap_example.elf
+1. Build Border Router Firmware
+Source RIOT environment
+```sh
+source /opt/riot.source
+```
+Build border router firmware for M3 node with baudrate 500000
+Note: Use a different 802.15.4 channel if needed
+```sh
+make ETHOS_BAUDRATE=500000 DEFAULT_CHANNEL=<channel> BOARD=iotlab-m3 -C examples/gnrc_border_router clean all
 ```
 
-If error "*** USE_NEWLIB_NANO==1 but nano include folder not found!" appear, you need to type ```source /opt/riot.source``` in your terminal. This will fix that error.
 
-2. Wait for the experiment to be in the Running state:
-```shell 
-iotlab-experiment wait --timeout 30 --cancel-on-timeout
+2. Flash Border Router Firmware
+Flash the border router firmware to the first M3 node (m3-1 in this case)
+```sh
+iotlab-node --flash examples/gnrc_border_router/bin/iotlab-m3/gnrc_border_router.elf -l grenoble,m3,<id>
 ```
-3. Get the experiment nodes list:
-```shell
-iotlab-experiment --jmespath="items[*].network_address | sort(@)" get --nodes
-```
-4. Flash the firmware on the iotlab-m3
-From here you will choose one node with the CoAP server role and the other one with client role. You need to open a terminal for both nodes. For server and client node, open a new terminal and run the following command by replace "389721" with your experiment number and "103", "104" are your 2 nodes number as in the screenshots belows.
-```shell
-iotlab-node -i 389721 -l grenoble,m3,103 -up ./bin/iotlab-m3/gcoap_example.elf
-iotlab-node -i 389721 -l grenoble,m3,104 -up ./bin/iotlab-m3/gcoap_example.elf
-# make DEFAULT_CHANNEL=18 DEFAULT_PAN_ID=0x3be0 IOTLAB_NODE=m3-96.grenoble.iot-lab.info flash
-```
-![Alt text](images/image-6.png)
-![Alt text](images/image-7.png)
-<!-- ```shell
-make BOARD=iotlab-m3 IOTLAB_NODE=auto flash
-``` -->
-Now you should be able to use all command available in our project as below, furthur explaination on these commands will be on below:
-![Alt text](images/image-10.png)
 
-Usage: replace "fe80::e449:92fa:8265:160d" with your ip6 address
-```shell
-coap get fe80::e449:92fa:8265:160d 5683 /.well-known/core
-coap get fe80::e449:92fa:8265:160d 5683 /riot/board
-coap get fe80::e449:92fa:8265:160d 5683 /temperature
-coap get fe80::e449:92fa:8265:160d 5683 /value
-coap put fe80::e449:92fa:8265:160d 5683 /value 8888
-coap get fe80::e449:92fa:8265:160d 5683 /value
+
+3. Configure Border Router Network
+
+Configure the network of the border router on m3-<id>
+Propagate an IPv6 prefix with ethos_uhcpd.py
+```sh
+sudo ethos_uhcpd.py m3-<id> tap0 2001:660:5307:3100::1/64
 ```
-5. Next step:
-![Alt text](images/image-5.png)
 
-## Project Structure
+4. Setup MQTT Broker and Mosquitto Bridge on A8 Node
+Now, in another terminal, SSH to the SSH frontend, and login into clone the mqtt_broker and mosquitto bridge configuration files in A8 shared directory.
+SSH into the A8 node
+```sh
+ssh root@node-a8-1
+```
+Check the global IPv6 address of the A8 node
+```sh
+ifconfig
+```
 
-[Provide an overview of the directory structure and key files in the project. This helps users navigate and understand the organization of the codebase.]
+5. Start MQTT Broker
+From the A8 shared directory, start the MQTT broker using config.conf
+```sh
+cd ~/A8
+broker_mqtts config.conf
+```
+
+Configure and Start Mosquitto Bridge
+From another terminal on the A8 node, check for existing mosquitto service and stop it
+![Alt text](images/image3.png)
+Modify mosquitto.config with the IPv6 address of the Mosquitto broker (e.g., AWS-EC2 instance)
+
+![Alt text](images/image4.png)
+
+Start Mosquitto service using the modified configuration file
+```sh
+root@node-a8-3:~/A8/mqtt_bridge# mosquitto -c mosquitto.conf
+```
+
+###  Tests
+#### Build and Flash Sensor Node Firmware
+From another terminal log into SSH front end of grenoble site
+Clone the sensor node directory containing Makefile and main.c
+Build the firmware for the sensor node using A8 node's IPv6 address and tap-id
+```sh
+make DEFAULT_CHANNEL=15 SERVER_ADDR=<IPv6 address> EMCUTE_ID=station(tap-id) BOARD=iotlab-m3 -C . clean all
+```
+
+#### Flash the sensor node firmware on an M3 node
+```sh
+iotlab-node --flash ./bin/iotlab-m3/SensorNode.elf -l grenoble,m3,<id>
+```
+
+
+#### Connect to Sensor Node
+Log into the M3 node
+```sh
+nc m3-<id> 20000
+```
+
+### Setting Up EC2 Instance
+
+1. Create a new Subnet and VPC. Make sure to add IPV6 CIDRs on the Subnet and VPC.
+2. Enable Public Routes for both IPV4 and IPv6 on internet gateway.
+3. Create a new Security Group and enable PORT 1883. Also enable ICMP for IPv4 and IPv6. 
+4. Create a new EC2 Instance and assign these newly created resources to it. Also assign a IPv6 to the instance.
+5. Generate key pair to ssh in to the EC2.
+
+Access the EC2 instance via SSH and execute the following commands to install the Mosquitto broker:
+
+Add Mosquitto PPA repository: sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa
+
+**Update the package list:** sudo apt-get update
+
+**Install Mosquitto:** sudo apt-get install mosquitto
+
+**Install Mosquitto clients:** sudo apt-get install mosquitto-clients
+
+**Clean the package cache:** sudo apt clean
+
+
+Check the status of the Mosquitto service to ensure it's running:
+
+```sh
+sudo service mosquitto status
+```
+
+Run the node Influxdb container on EC2 instance:
+
+```sh
+docker run --name influxdb -p 8086:8086 influxdb:2.2.0
+```
+Run the node Grafana container on EC2 instance:
+
+```sh
+docker run -d --name=grafana -p 3000:3000 grafana/grafana
+
+
