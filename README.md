@@ -72,6 +72,7 @@ cd IOT_Mini_Project1
 ```
 ![Alt text](image-15.png)
 - Building RIOT on the SSH frontend requires a recent ARM gcc toolchain, the default is 4.9 and is not compatible. You just have to issue the ```source /opt/riot.source``` command like this:
+
 ![Alt text](images/image-16.png)
  
 ### Usage
@@ -123,14 +124,12 @@ broker_mqtts config.conf
 
 Configure and Start Mosquitto Bridge
 From another terminal on the A8 node, check for existing mosquitto service and stop it
-![Alt text](images/image3.png)
-Modify mosquitto.config with the IPv6 address of the Mosquitto broker (e.g., AWS-EC2 instance)
 
-![Alt text](images/image4.png)
+Modify mosquitto.conf with the IPv6 address of AWS-EC2 instance
 
 Start Mosquitto service using the modified configuration file
 ```sh
-root@node-a8-3:~/A8/mqtt_bridge# mosquitto -c mosquitto.conf
+root@node-a8-3:~/A8# mosquitto -c mosquitto.conf
 ```
 
 ###  Tests
@@ -139,7 +138,7 @@ From another terminal log into SSH front end of grenoble site
 Clone the sensor node directory containing Makefile and main.c
 Build the firmware for the sensor node using A8 node's IPv6 address and tap-id
 ```sh
-make DEFAULT_CHANNEL=15 SERVER_ADDR=<IPv6 address> EMCUTE_ID=station(tap-id) BOARD=iotlab-m3 -C . clean all
+make DEFAULT_CHANNEL=15 SERVER_ADDR=<EC2 IPv6> EMCUTE_ID=station<tap-id> BOARD=iotlab-m3 -C . clean all
 ```
 
 #### Flash the sensor node firmware on an M3 node
@@ -162,7 +161,25 @@ nc m3-<id> 20000
 4. Create a new EC2 Instance and assign these newly created resources to it. Also assign a IPv6 to the instance.
 5. Generate key pair to ssh in to the EC2.
 
+
+Make sure you have configured your Security group, ACL and Subnet just like snapshots below:
+
+**Security Group:**
+1.  ![Alt text](images/image17.png)
+
+**Route table:**
+2.  ![Alt text](images/image18.png)
+
+**Access Control List (ACL):**
+3. ![Alt text](images/image18.png)
+
+
 Access the EC2 instance via SSH and execute the following commands to install the Mosquitto broker:
+
+```
+ssh -i key.pem unbuntu@<public dns of the ec2>
+
+```
 
 Add Mosquitto PPA repository: sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa
 
