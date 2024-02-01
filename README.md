@@ -171,7 +171,7 @@ Make sure you have configured your Security group, ACL and Subnet just like snap
 ![Alt text](images/image18.png)
 
 **Access Control List (ACL):**
-![Alt text](images/image18.png)
+![Alt text](images/image19.png)
 
 
 Access the EC2 instance via SSH and execute the following commands to install the Mosquitto broker:
