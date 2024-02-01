@@ -171,7 +171,7 @@ Make sure you have configured your Security group, ACL and Subnet just like snap
 2.  ![Alt text](images/image18.png)
 
 **Access Control List (ACL):**
-3. ![Alt text](images/image18.png)
+3. ![Alt text](images/image19.png)
 
 
 Access the EC2 instance via SSH and execute the following commands to install the Mosquitto broker:
@@ -208,4 +208,16 @@ Run the node Grafana container on EC2 instance:
 ```sh
 docker run -d --name=grafana -p 3000:3000 grafana/grafana
 
+```
+
+We used influx DB as it is open source, light weight and efficient for time series data. Since our application is small, this seemed like a better option compared to other DB Options such as MongoDB or PostgreSQL.
+
+After the data is transmitted, influx DB will store it and pulled by grafana, where user can see the data in realtime.
+
+
+![Alt text](images/image22.png)
+
+![Alt text](images/image20.png)
+
+![Alt text](images/image21.png)
 
