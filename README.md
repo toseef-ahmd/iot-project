@@ -165,13 +165,17 @@ nc m3-<id> 20000
 Make sure you have configured your Security group, ACL and Subnet just like snapshots below:
 
 **Security Group:**
-1.  ![Alt text](images/image17.png)
+![Alt text](images/image17.png)
 
 **Route table:**
-2.  ![Alt text](images/image18.png)
+![Alt text](images/image18.png)
 
 **Access Control List (ACL):**
+<<<<<<< HEAD
 3. ![Alt text](images/image19.png)
+=======
+![Alt text](images/image19.png)
+>>>>>>> 55ae4b770bf588b994e61ad633a83e4065b2ba84
 
 
 Access the EC2 instance via SSH and execute the following commands to install the Mosquitto broker:
