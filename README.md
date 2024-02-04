@@ -6,11 +6,11 @@ Welcome to the IoT Mini Project 1 repository! This project aims to demonstrate t
 
 ## Members
 
-**Toseef Ahmed:**	2307270
-
-**Hung Trinh:**	2307229
-
-**Mazen Hassaan:**	2307227
+| **Student name**  | **Student ID**   |
+| :----------- | :--------------- |
+| Toseef Ahmed |  2307270 |
+| Hung Trinh   |  2307229 |
+| Mazen Hassaan | 2307227 |
 
 ## Project Overview
 
