@@ -4,6 +4,12 @@
 
 Welcome to the IoT Mini Project 1 repository! This project aims to demonstrate the implementation of a simple Internet of Things (IoT) solution. Whether you're a student, developer, or enthusiast, this project provides a hands-on experience in building a basic IoT system.
 
+## Members
+**Student name	Student ID**
+Toseef Ahmed	2307270
+Hung Trinh	2307229
+Mazen Hassaan	2307227
+
 ## Project Overview
 
 The project focuses on getting data from IOT sensor via IOT Testbed and send it to cloud database. Key features include:
