@@ -179,9 +179,7 @@ Make sure you have configured your Security group, ACL and Subnet just like snap
 ![Alt text](images/image18.png)
 
 **Access Control List (ACL):**
-<<<<<<< HEAD
-3. ![Alt text](images/image19.png)
-=======
+
 ![Alt text](images/image19.png)
 >>>>>>> 55ae4b770bf588b994e61ad633a83e4065b2ba84
 
